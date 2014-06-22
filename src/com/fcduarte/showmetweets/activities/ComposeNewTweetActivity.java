@@ -4,9 +4,13 @@ import java.util.Date;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -18,11 +22,15 @@ import com.squareup.picasso.Picasso;
 
 public class ComposeNewTweetActivity extends Activity {
 	
+	private static final int MAX_CHARACTERS = 140;
+	
 	private ImageView mAvatarImageView;
 	private TextView mNameTextView;
 	private TextView mUsernameTextView;
-	private TextView mTweetBody;
+	private EditText mTweetBody;
 	private User mLoggedUser;
+	private MenuItem mSendTweetMenuItem;
+	private MenuItem mTotalCharactersLeftMenuItem;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -32,7 +40,8 @@ public class ComposeNewTweetActivity extends Activity {
 		mAvatarImageView = (ImageView) findViewById(R.id.user_avatar);
 		mNameTextView = (TextView) findViewById(R.id.name);
 		mUsernameTextView = (TextView) findViewById(R.id.username);
-		mTweetBody = (TextView) findViewById(R.id.tweet_body);
+		mTweetBody = (EditText) findViewById(R.id.tweet_body);
+		mTweetBody.addTextChangedListener(watcher);
 		
 		mLoggedUser = (User) getIntent().getSerializableExtra(HomeActivity.LOGGED_USER_KEY);
 		mNameTextView.setText(mLoggedUser.getName());
@@ -52,6 +61,15 @@ public class ComposeNewTweetActivity extends Activity {
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		getMenuInflater().inflate(R.menu.menu_compose_new_tweet, menu);
+		mSendTweetMenuItem = menu.findItem(R.id.send_tweet);
+		mTotalCharactersLeftMenuItem = menu.findItem(R.id.character_left);
+
+		TextView tv  = new TextView(this);
+		tv.setText(R.string.character_left);
+		tv.setTextColor(Color.WHITE);
+		tv.setPadding(0, 0, 20, 0);
+		mTotalCharactersLeftMenuItem.setActionView(tv);
+
 		return true;
 	}
 	
@@ -72,5 +90,34 @@ public class ComposeNewTweetActivity extends Activity {
 		finish();
 	}
 	
+	private TextWatcher watcher = new TextWatcher() {
+		
+		@Override
+		public void onTextChanged(CharSequence s, int start, int before, int count) {
+			// no-op
+		}
+		
+		@Override
+		public void beforeTextChanged(CharSequence s, int start, int count,
+				int after) {
+			// no-op			
+		}
+		
+		@Override
+		public void afterTextChanged(Editable s) {
+			int totalCharacters = s.length();
+			processCharactersLeft(totalCharacters);
+		}
+	};
+	
+	private void processCharactersLeft(int totalCharacters) {
+		int charactersLeft = MAX_CHARACTERS - totalCharacters;
+		boolean enabled = charactersLeft >= 0 && charactersLeft < MAX_CHARACTERS;
+		mSendTweetMenuItem.setEnabled(enabled);
+		
+		((TextView) mTotalCharactersLeftMenuItem.getActionView()).setText(String.valueOf(charactersLeft));
+		((TextView) mTotalCharactersLeftMenuItem.getActionView()).setTextColor(enabled ? Color.WHITE : Color.RED);
+	}
+
 	
 }

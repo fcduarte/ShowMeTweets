@@ -11,5 +11,6 @@
     <string name="empty_tweet">Nothing is happening? Tell us what\'s in your mind</string>
     <string name="title_activity_sign_in_with_twitter">SignInWithTwitter</string>
     <string name="text_welcome">Welcome! Before you use this awesome app we need to first connect with your twitter account</string>
-
+	<string name="character_left">140</string>
+    
 </resources>
