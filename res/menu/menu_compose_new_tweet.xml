@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+    
+    <item
+        android:id="@+id/send_tweet"
+        android:showAsAction="always"
+        android:onClick="onSendTweetClicked"
+        android:title="@string/send_tweet">
+    </item>
+    
+</menu>

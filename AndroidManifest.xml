@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.fcduarte.showmetweets"
+    android:versionCode="1"
+    android:versionName="1.0" >
+
+    <uses-sdk
+        android:minSdkVersion="14"
+        android:targetSdkVersion="19" />
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
+    <application
+        android:name="com.activeandroid.app.Application"
+        android:allowBackup="true"
+        android:icon="@drawable/ic_launcher"
+        android:label="@string/app_name"
+        android:logo="@drawable/ic_logo"
+        android:theme="@style/CustomActionBarTheme" >
+        <meta-data
+            android:name="AA_DB_NAME"
+            android:value="ShowMeTweets" />
+        <meta-data
+            android:name="AA_DB_VERSION"
+            android:value="1" />
+
+        <activity
+            android:name="com.fcduarte.showmetweets.activities.SignInWithTwitter"
+            android:label="@string/title_activity_sign_in_with_twitter" >
+            <intent-filter android:label="@string/app_name" >
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="showmetweets"
+                    android:scheme="oauth" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="com.fcduarte.showmetweets.activities.HomeActivity"
+            android:label="@string/home" >
+        </activity>
+        <activity
+            android:name="com.fcduarte.showmetweets.activities.ComposeNewTweetActivity"
+            android:label="@string/title_activity_compose_new_tweet"
+            android:parentActivityName="com.fcduarte.showmetweets.activities.HomeActivity" >
+        </activity>
+    </application>
+
+</manifest>

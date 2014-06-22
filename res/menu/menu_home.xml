@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+    
+    <item
+        android:id="@+id/compose_new_tweet"
+        android:icon="@drawable/ic_action_compose_new_tweet"
+        android:showAsAction="always"
+        android:onClick="onComposeNewTweetClicked"
+        android:title="@string/compose_new_tweet">
+    </item>
+    
+</menu>

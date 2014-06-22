@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">ShowMeTweets</string>
+    <string name="home">Home</string>
+    <string name="compose_new_tweet">Compose New Tweet</string>
+    <string name="empty_list_tweets">There isn\'t any tweets to show here. Start to follow some users or compose your first tweet</string>
+    <string name="title_activity_compose_new_tweet"></string>
+    <string name="tweet_body_hint">What\'s happening?</string>
+    <string name="send_tweet">TWEET</string>
+    <string name="empty_tweet">Nothing is happening? Tell us what\'s in your mind</string>
+    <string name="title_activity_sign_in_with_twitter">SignInWithTwitter</string>
+    <string name="text_welcome">Welcome! Before you use this awesome app we need to first connect with your twitter account</string>
+
+</resources>
