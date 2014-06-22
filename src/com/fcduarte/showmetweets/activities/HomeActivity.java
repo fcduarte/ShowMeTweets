@@ -10,6 +10,8 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -44,6 +46,7 @@ public class HomeActivity extends Activity {
 	private UserDAO mUserDAO;
 	private TweetDAO mTweetDAO;
 	private TwitterPreferencesUtils mTwitterPreferencesUtils;
+	private SwipeRefreshLayout mRefreshContainer;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -56,6 +59,12 @@ public class HomeActivity extends Activity {
 		mLoadingProgressBar = (ProgressBar) findViewById(R.id.progress_bar_loading);
 		mTweetsListViewAdapter = new TweetsListViewAdapter(new ArrayList<Tweet>(), HomeActivity.this);
 		mTwitterPreferencesUtils = new TwitterPreferencesUtils(this);
+		mRefreshContainer = (SwipeRefreshLayout) findViewById(R.id.swipe_container);
+		mRefreshContainer.setColorScheme(android.R.color.holo_blue_bright, 
+	            android.R.color.holo_green_light, 
+	            android.R.color.holo_orange_light, 
+	            android.R.color.holo_red_light);
+		mRefreshContainer.setOnRefreshListener(refreshListener);
 
 		mTweetsListView.setEmptyView(mEmptyListTweets);
 		mTweetsListView.setAdapter(mTweetsListViewAdapter);
@@ -120,6 +129,10 @@ public class HomeActivity extends Activity {
 			} else {
 				mTweetsListViewAdapter.setTweets(tweets);
 				mTweetsListViewAdapter.notifyDataSetChanged();
+			}
+			
+			if (mRefreshContainer.isRefreshing()) {
+				mRefreshContainer.setRefreshing(false);
 			}
 		}
 
@@ -207,8 +220,17 @@ public class HomeActivity extends Activity {
 		
 		@Override
 		public void onLoadMore(int page, int totalItemsCount) {
-			page = totalItemsCount/20 + 1;
+			Log.i("onLoadMore()", String.format("page: %s, total items: %s", page, totalItemsCount));
 			new SynchronizeTwitterAsyncTask().execute(page);
 		}
 	};
+	
+	private OnRefreshListener refreshListener = new OnRefreshListener() {
+		
+		@Override
+		public void onRefresh() {
+			new SynchronizeTwitterAsyncTask().execute(1);
+		}
+	};
+
 }
