@@ -77,7 +77,7 @@ public class TwitterPreferencesUtils {
 	
 	public boolean userChanged(User user) {
 		String loggedUser = loadLoggedUser();
-		return loggedUser != null && !user.getUsername().equals(loggedUser);
+		return loggedUser == null || !user.getUsername().equals(loggedUser);
 	}
 
 }
