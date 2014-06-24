@@ -1,7 +1,7 @@
 ShowMeTweets
 ============
 
-A simple Twiiter client app for Android which retrives and posts tweets of a user
+A simple Twitter client app for Android which retrives and posts tweets of a user
 
 Time spent: 20 hours spent in total
 
