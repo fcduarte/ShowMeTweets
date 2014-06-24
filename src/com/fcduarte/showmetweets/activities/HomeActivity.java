@@ -28,7 +28,7 @@ import com.fcduarte.showmetweets.dao.UserDAO;
 import com.fcduarte.showmetweets.listeners.EndlessScrollListener;
 import com.fcduarte.showmetweets.model.Tweet;
 import com.fcduarte.showmetweets.model.User;
-import com.fcduarte.showmetweets.utils.TwitterPreferencesUtils;
+import com.fcduarte.showmetweets.utils.TwitterUtils;
 
 public class HomeActivity extends Activity {
 
@@ -45,7 +45,7 @@ public class HomeActivity extends Activity {
 	private Twitter mTwitter;
 	private UserDAO mUserDAO;
 	private TweetDAO mTweetDAO;
-	private TwitterPreferencesUtils mTwitterPreferencesUtils;
+	private TwitterUtils mTwitterPreferencesUtils;
 	private SwipeRefreshLayout mRefreshContainer;
 	
 	@Override
@@ -58,7 +58,7 @@ public class HomeActivity extends Activity {
 		mEmptyListTweets = (TextView) findViewById(R.id.empty_list_tweets);
 		mLoadingProgressBar = (ProgressBar) findViewById(R.id.progress_bar_loading);
 		mTweetsListViewAdapter = new TweetsListViewAdapter(new ArrayList<Tweet>(), HomeActivity.this);
-		mTwitterPreferencesUtils = new TwitterPreferencesUtils(this);
+		mTwitterPreferencesUtils = new TwitterUtils(this);
 		mRefreshContainer = (SwipeRefreshLayout) findViewById(R.id.swipe_container);
 		mRefreshContainer.setColorScheme(android.R.color.holo_blue_bright, 
 	            android.R.color.holo_green_light, 
@@ -90,6 +90,8 @@ public class HomeActivity extends Activity {
 			tweet.save();
 			
 			mTweetsListViewAdapter.addTweet(tweet);
+			mTweetsListView.setSelection(0);
+			
 			new SendTweetsToRemoteAsyncTask().execute();
 		}
 	}
@@ -154,6 +156,8 @@ public class HomeActivity extends Activity {
 				User user = new User();
 				user.buildFromRemote(remoteUser);
 				user.save();
+				
+				mLoggedUser = user;
 			}
 			
 			if (mTwitterPreferencesUtils.userChanged(mLoggedUser)) {
