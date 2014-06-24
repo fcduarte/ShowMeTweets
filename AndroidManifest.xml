@@ -46,12 +46,16 @@
         </activity>
         <activity
             android:name="com.fcduarte.showmetweets.activities.HomeActivity"
+            android:launchMode="singleTop"
             android:label="@string/home" >
         </activity>
         <activity
             android:name="com.fcduarte.showmetweets.activities.ComposeNewTweetActivity"
             android:label="@string/title_activity_compose_new_tweet"
             android:parentActivityName="com.fcduarte.showmetweets.activities.HomeActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.fcduarte.showmetweets.activities.HomeActivity" />
         </activity>
     </application>
 
