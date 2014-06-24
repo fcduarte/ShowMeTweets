@@ -62,6 +62,8 @@ public class TweetsListViewAdapter extends BaseAdapter {
 			holder.tvName = (TextView) view.findViewById(R.id.name);
 			holder.tvBody = (TextView) view.findViewById(R.id.body);
 			holder.tvTimeStampt = (TextView) view.findViewById(R.id.timestamp);
+			holder.tvRetweetCount = (TextView) view.findViewById(R.id.retweet_count);
+			holder.tvFavoriteCount = (TextView) view.findViewById(R.id.favorite_count);
 
 			view.setTag(holder);
 		} else {
@@ -75,13 +77,12 @@ public class TweetsListViewAdapter extends BaseAdapter {
 		holder.tvName.setText(tweet.getUser().getName());
 		holder.tvBody.setText(tweet.getBody());
 		holder.tvTimeStampt.setText(tweet.getCreatedAtFormatted());
+		holder.tvRetweetCount.setText(String.valueOf(tweet.getRetweetCount()));
+		holder.tvFavoriteCount.setText(String.valueOf(tweet.getFavoriteCount()));
 
 		// Trigger the download of the URL asynchronously into the image view.
-		Picasso picasso = Picasso.with(context);
-		picasso.setIndicatorsEnabled(true);
-		picasso.setLoggingEnabled(true);
-		
-		picasso.load(url)
+		Picasso.with(context)
+				.load(url)
 				.placeholder(R.drawable.user_placeholder)
 				.resizeDimen(R.dimen.avatar_image_size,
 						R.dimen.avatar_image_size).centerInside()
@@ -96,6 +97,8 @@ public class TweetsListViewAdapter extends BaseAdapter {
 		TextView tvName;
 		TextView tvBody;
 		TextView tvTimeStampt;
+		TextView tvRetweetCount;
+		TextView tvFavoriteCount;
 	}
 	
 	public void addTweet(Tweet tweet) {

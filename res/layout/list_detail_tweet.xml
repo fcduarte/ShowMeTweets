@@ -10,7 +10,7 @@
         android:layout_height="match_parent"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
-        android:contentDescription="TODO"
+        android:contentDescription="@string/user_avatar_description"
         android:paddingRight="4dp"
         android:src="@drawable/user_placeholder" />
 
@@ -20,9 +20,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_toRightOf="@+id/user_avatar"
-        android:text="Joao Silva asd asd asd asd"
         android:singleLine="true"
-        
         android:textStyle="bold" />
 
     <TextView
@@ -30,12 +28,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:layout_toRightOf="@+id/name"
         android:layout_toLeftOf="@+id/timestamp"
+        android:layout_toRightOf="@+id/name"
         android:enabled="false"
         android:paddingLeft="8dp"
-        android:singleLine="true"
-        android:text="joaoasdsadasdsadasdsasasadasd" />
+        android:singleLine="true" />
 
     <TextView
         android:id="@+id/body"
@@ -44,8 +41,7 @@
         android:layout_below="@+id/name"
         android:layout_toRightOf="@+id/user_avatar"
         android:autoLink="all"
-     	android:linksClickable="true"
-        android:text="test tweet" />
+        android:linksClickable="true" />
 
     <TextView
         android:id="@+id/timestamp"
@@ -54,7 +50,41 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
         android:enabled="false"
-        android:gravity="right"
-        android:text="29m" />
+        android:gravity="right" />
+
+    <ImageView
+        android:id="@+id/image_retweet"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/body"
+        android:layout_toRightOf="@+id/user_avatar"
+        android:contentDescription="@string/image_retweet_description"
+        android:src="@drawable/ic_retweet" />
+
+    <TextView
+        android:id="@+id/retweet_count"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/body"
+        android:layout_toRightOf="@+id/image_retweet"
+        android:layout_marginTop="6dp"
+        android:layout_marginRight="20dp" />
+
+    <ImageView
+        android:id="@+id/image_favorite"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:contentDescription="@string/image_favorite_description"
+        android:layout_below="@+id/body"
+        android:layout_toRightOf="@+id/retweet_count"
+        android:src="@drawable/ic_favorite" />
+
+    <TextView
+        android:id="@+id/favorite_count"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/body"
+        android:layout_toRightOf="@+id/image_favorite"
+        android:layout_marginTop="6dp" />
 
 </RelativeLayout>

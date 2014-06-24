@@ -12,5 +12,8 @@
     <string name="title_activity_sign_in_with_twitter">SignInWithTwitter</string>
     <string name="text_welcome">Welcome! Before you use this awesome app we need to first connect with your twitter account</string>
 	<string name="character_left">140</string>
+	<string name="user_avatar_description">User Profile Image</string>
+	<string name="image_retweet_description">Retweet Count</string>
+	<string name="image_favorite_description">Favorite Count</string>
     
 </resources>

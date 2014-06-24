@@ -25,17 +25,26 @@ public class Tweet extends Model implements Serializable, Comparable<Tweet> {
 
 	@Column(name = "users")
 	private User user;
+	
+	@Column(name = "favorite_count")
+	private int favoriteCount;
+	
+	@Column(name = "retweet_count")
+	private int retweetCount;
 
 	public Tweet() {
 		super();
 	}
 
-	public Tweet(String body, Date createdAt, Long tweetId, User user) {
+	public Tweet(String body, Date createdAt, Long tweetId, User user, int favoriteCount,
+			int retweetCount) {
 		super();
 		this.body = body;
 		this.createdAt = createdAt;
 		this.tweetId = tweetId;
 		this.user = user;
+		this.favoriteCount = favoriteCount;
+		this.retweetCount = retweetCount;
 	}
 
 	public String getBody() {
@@ -75,6 +84,22 @@ public class Tweet extends Model implements Serializable, Comparable<Tweet> {
 				this.getCreatedAt().getTime(), new Date().getTime(), 0,
 				DateUtils.FORMAT_ABBREV_RELATIVE).toString();
 	}
+	
+	public int getFavoriteCount() {
+		return favoriteCount;
+	}
+
+	public void setFavoriteCount(int favoriteCount) {
+		this.favoriteCount = favoriteCount;
+	}
+
+	public int getRetweetCount() {
+		return retweetCount;
+	}
+
+	public void setRetweetCount(int retweetCount) {
+		this.retweetCount = retweetCount;
+	}
 
 	@Override
 	public int compareTo(Tweet another) {
@@ -88,7 +113,9 @@ public class Tweet extends Model implements Serializable, Comparable<Tweet> {
 		
 		User user = new User();
 		user.buildFromRemote(status.getUser());
-		this.user = user; 		
+		this.user = user;
+		this.favoriteCount = status.getFavoriteCount();
+		this.retweetCount = status.getRetweetCount();
 	}
 
 }

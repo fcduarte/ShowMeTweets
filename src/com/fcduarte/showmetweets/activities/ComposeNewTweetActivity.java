@@ -47,11 +47,8 @@ public class ComposeNewTweetActivity extends Activity {
 		mNameTextView.setText(mLoggedUser.getName());
 		mUsernameTextView.setText(mLoggedUser.getUsernameFormatted());
 		
-		Picasso picasso = Picasso.with(this);
-		picasso.setIndicatorsEnabled(true);
-		picasso.setLoggingEnabled(true);
-		
-		picasso.load(mLoggedUser.getAvatarUrl())
+		Picasso.with(this)
+				.load(mLoggedUser.getAvatarUrl())
 				.placeholder(R.drawable.user_placeholder)
 				.resizeDimen(R.dimen.avatar_image_size,
 						R.dimen.avatar_image_size).centerInside()
@@ -81,7 +78,7 @@ public class ComposeNewTweetActivity extends Activity {
 			return;
 		}
 		
-		Tweet tweet = new Tweet(tweetBody, new Date(), null, mLoggedUser);
+		Tweet tweet = new Tweet(tweetBody, new Date(), null, mLoggedUser, 0, 0);
 		
 		Intent intent = new Intent();
 		intent.putExtra(HomeActivity.TWEET_KEY, tweet);
