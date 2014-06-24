@@ -31,4 +31,4 @@ The project uses open-source libraries such as:
 
 ### Walkthrough of all user stories:
 
-![ShowMeTweets]()
+![ShowMeTweets](https://cloud.githubusercontent.com/assets/1507064/3376255/1a6b42c4-fbd3-11e3-9b62-7c1b5aedb161.gif)
