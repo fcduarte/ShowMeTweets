@@ -208,7 +208,9 @@ public class HomeActivity extends Activity {
 			for (Tweet tweet : tweets) {
 				if (tweet.getUser().getTwitterId().equals(mLoggedUser.getTwitterId())) {
 					try {
-						mTwitter.updateStatus(tweet.getBody());
+						twitter4j.Status status = mTwitter.updateStatus(tweet.getBody());
+						tweet.setTweetId(status.getId());
+						tweet.save();
 					} catch (TwitterException e) {
 						Log.e("TwitterClient", "updateStatus()", e);
 					}
