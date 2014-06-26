@@ -45,7 +45,7 @@ public class HomeActivity extends Activity {
 	private Twitter mTwitter;
 	private UserDAO mUserDAO;
 	private TweetDAO mTweetDAO;
-	private TwitterUtils mTwitterPreferencesUtils;
+	private TwitterUtils mTwitterUtils;
 	private SwipeRefreshLayout mRefreshContainer;
 	
 	@Override
@@ -58,7 +58,7 @@ public class HomeActivity extends Activity {
 		mEmptyListTweets = (TextView) findViewById(R.id.empty_list_tweets);
 		mLoadingProgressBar = (ProgressBar) findViewById(R.id.progress_bar_loading);
 		mTweetsListViewAdapter = new TweetsListViewAdapter(new ArrayList<Tweet>(), HomeActivity.this);
-		mTwitterPreferencesUtils = new TwitterUtils(this);
+		mTwitterUtils = new TwitterUtils(this);
 		mRefreshContainer = (SwipeRefreshLayout) findViewById(R.id.swipe_container);
 		mRefreshContainer.setColorScheme(android.R.color.holo_blue_bright, 
 	            android.R.color.holo_green_light, 
@@ -109,6 +109,16 @@ public class HomeActivity extends Activity {
 		startActivityForResult(intent, COMPOSE_NEW_TWEET);
 	}
 	
+	private User findLocalSavedUser() {
+		String username = mTwitterUtils.loadLoggedUser();
+		
+		if (username == null) {
+			return null;
+		}
+		
+		return mUserDAO.findByUsername(username);
+	}
+	
 	private class SynchronizeTwitterAsyncTask extends AsyncTask<Integer, Void, Void> {
 
 		
@@ -143,26 +153,24 @@ public class HomeActivity extends Activity {
 			twitter4j.User remoteUser = getRemoteUser();
 			
 			if (remoteUser == null) {
-				mTwitterPreferencesUtils.clear();
-				
-				Intent intent = new Intent(HomeActivity.this, SignInWithTwitter.class);
-				HomeActivity.this.startActivity(intent);
-				return null;
+				mLoggedUser = findLocalSavedUser();
+			} else {
+				mLoggedUser = mUserDAO.findByUsername(remoteUser.getScreenName());
 			}
 			
-			mLoggedUser = mUserDAO.findByTwitterId(remoteUser.getId());
 			
-			if (mLoggedUser == null) {
+			if (remoteUser != null && mLoggedUser == null) {
 				User user = new User();
 				user.buildFromRemote(remoteUser);
 				user.save();
 				
 				mLoggedUser = user;
+
 			}
 			
-			if (mTwitterPreferencesUtils.userChanged(mLoggedUser)) {
+			if (mTwitterUtils.userChanged(mLoggedUser)) {
 				mTweetDAO.deleteAll();
-				mTwitterPreferencesUtils.saveLoggedUser(mLoggedUser);
+				mTwitterUtils.saveLoggedUser(mLoggedUser);
 			}
 			
 			saveRemoteTweets(params[0]);
@@ -191,8 +199,18 @@ public class HomeActivity extends Activity {
 	        try {
 				long id = mTwitter.getId();
 				return mTwitter.showUser(id);
-			} catch (IllegalStateException | TwitterException e) {
+			} catch (IllegalStateException e) {
+				return null;
+			} catch (TwitterException e) {
 				Log.e("TwitterClient", "getRemoteUser()", e);
+				
+				if (!e.isCausedByNetworkIssue()) {
+					mTwitterUtils.clear();
+					
+					Intent intent = new Intent(HomeActivity.this, SignInWithTwitter.class);
+					HomeActivity.this.startActivity(intent);
+				}
+				
 				return null;
 			}
 		}
