@@ -3,6 +3,8 @@ package com.fcduarte.showmetweets.model;
 import java.io.Serializable;
 import java.util.Date;
 
+import twitter4j.MediaEntity;
+
 import android.text.format.DateUtils;
 
 import com.activeandroid.Model;
@@ -31,13 +33,16 @@ public class Tweet extends Model implements Serializable, Comparable<Tweet> {
 	
 	@Column(name = "retweet_count")
 	private int retweetCount;
+	
+	@Column(name = "body_media_url")
+	private String bodyMediaURL;
 
 	public Tweet() {
 		super();
 	}
 
 	public Tweet(String body, Date createdAt, Long tweetId, User user, int favoriteCount,
-			int retweetCount) {
+			int retweetCount, String bodyMediaURL) {
 		super();
 		this.body = body;
 		this.createdAt = createdAt;
@@ -45,6 +50,7 @@ public class Tweet extends Model implements Serializable, Comparable<Tweet> {
 		this.user = user;
 		this.favoriteCount = favoriteCount;
 		this.retweetCount = retweetCount;
+		this.bodyMediaURL = bodyMediaURL;
 	}
 
 	public String getBody() {
@@ -100,6 +106,14 @@ public class Tweet extends Model implements Serializable, Comparable<Tweet> {
 	public void setRetweetCount(int retweetCount) {
 		this.retweetCount = retweetCount;
 	}
+	
+	public String getBodyMediaURL() {
+		return bodyMediaURL;
+	}
+
+	public void setBodyMediaURL(String bodyMediaURL) {
+		this.bodyMediaURL = bodyMediaURL;
+	}
 
 	@Override
 	public int compareTo(Tweet another) {
@@ -116,6 +130,11 @@ public class Tweet extends Model implements Serializable, Comparable<Tweet> {
 		this.user = user;
 		this.favoriteCount = status.getFavoriteCount();
 		this.retweetCount = status.getRetweetCount();
+		
+		if (status.getMediaEntities().length > 0) {
+			MediaEntity mediaEntity = status.getMediaEntities()[0];
+			this.bodyMediaURL = mediaEntity.getMediaURL();
+		}
 	}
 
 }
