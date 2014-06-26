@@ -4,7 +4,6 @@ import java.io.Serializable;
 import java.util.Date;
 
 import twitter4j.MediaEntity;
-
 import android.text.format.DateUtils;
 
 import com.activeandroid.Model;

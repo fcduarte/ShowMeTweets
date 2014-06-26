@@ -11,7 +11,6 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.activeandroid.util.Log;
 import com.fcduarte.showmetweets.R;
 import com.fcduarte.showmetweets.model.Tweet;
 import com.squareup.picasso.Picasso;
