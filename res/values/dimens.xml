@@ -2,5 +2,5 @@
 <resources>
 
     <dimen name="avatar_image_size">60dp</dimen>
-
+    <dimen name="body_media_image_size">200dp</dimen>
 </resources>

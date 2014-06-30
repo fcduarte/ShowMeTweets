@@ -64,6 +64,7 @@ public class TweetsListViewAdapter extends BaseAdapter {
 			holder.tvTimeStampt = (TextView) view.findViewById(R.id.timestamp);
 			holder.tvRetweetCount = (TextView) view.findViewById(R.id.retweet_count);
 			holder.tvFavoriteCount = (TextView) view.findViewById(R.id.favorite_count);
+			holder.ivMediaBody = (ImageView) view.findViewById(R.id.media_body);
 
 			view.setTag(holder);
 		} else {
@@ -72,7 +73,9 @@ public class TweetsListViewAdapter extends BaseAdapter {
 
 		// Get the image URL for the current position.
 		Tweet tweet = getItem(position);
-		String url = tweet.getUser().getAvatarUrl();
+		String avatarUrl = tweet.getUser().getAvatarUrl();
+		String mediaBodyUrl = tweet.getBodyMediaURL();
+
 		holder.tvUsername.setText(tweet.getUser().getUsernameFormatted());
 		holder.tvName.setText(tweet.getUser().getName());
 		holder.tvBody.setText(tweet.getBody());
@@ -80,13 +83,18 @@ public class TweetsListViewAdapter extends BaseAdapter {
 		holder.tvRetweetCount.setText(String.valueOf(tweet.getRetweetCount()));
 		holder.tvFavoriteCount.setText(String.valueOf(tweet.getFavoriteCount()));
 
-		// Trigger the download of the URL asynchronously into the image view.
 		Picasso.with(context)
-				.load(url)
+				.load(avatarUrl)
 				.placeholder(R.drawable.user_placeholder)
 				.resizeDimen(R.dimen.avatar_image_size,
 						R.dimen.avatar_image_size).centerInside()
 				.into(holder.ivUserAvatar);
+
+		Picasso.with(context)
+				.load(mediaBodyUrl)
+				.resizeDimen(R.dimen.body_media_image_size,
+						R.dimen.body_media_image_size).centerInside()
+				.into(holder.ivMediaBody);
 
 		return view;
 	}
@@ -99,6 +107,7 @@ public class TweetsListViewAdapter extends BaseAdapter {
 		TextView tvTimeStampt;
 		TextView tvRetweetCount;
 		TextView tvFavoriteCount;
+		ImageView ivMediaBody;
 	}
 	
 	public void addTweet(Tweet tweet) {
