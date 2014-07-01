@@ -109,6 +109,12 @@ public class HomeActivity extends Activity {
 		startActivityForResult(intent, COMPOSE_NEW_TWEET);
 	}
 	
+	public void onShowProfileClicked(MenuItem menuItem) {
+		Intent intent = new Intent(this, ProfileActivity.class);
+		intent.putExtra(LOGGED_USER_KEY, mLoggedUser);
+		startActivity(intent);
+	}
+	
 	private User findLocalSavedUser() {
 		String username = mTwitterUtils.loadLoggedUser();
 		

@@ -1,12 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
-    
+
     <item
         android:id="@+id/compose_new_tweet"
         android:icon="@drawable/ic_action_compose_new_tweet"
-        android:showAsAction="always"
         android:onClick="onComposeNewTweetClicked"
+        android:showAsAction="always"
         android:title="@string/compose_new_tweet">
     </item>
-    
+    <item
+        android:id="@+id/show_profile"
+        android:icon="@drawable/ic_action_show_profile"
+        android:onClick="onShowProfileClicked"
+        android:showAsAction="always"
+        android:title="@string/show_profile">
+    </item>
+
 </menu>

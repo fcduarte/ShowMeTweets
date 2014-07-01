@@ -23,16 +23,38 @@ public class User extends Model implements Serializable {
 	@Column(name = "twitter_id")
 	private Long twitterId;
 	
+	@Column(name = "description")
+	private String description;
+	
+	@Column(name = "profile_background_url")
+	private String profileBackgroundUrl;
+	
+	@Column(name = "followers_count")
+	private int followersCount;
+	
+	@Column(name = "following_count")
+	private int followingCount;
+	
+	@Column(name = "tweets_count")
+	private int tweetsCount;
+	
 	public User() {
 		super();
 	}
 
-	public User(String name, String username, String avatarUrl, Long twitterId) {
+	public User(String name, String username, String avatarUrl, Long twitterId,
+			String description, String profileBackgroundUrl,
+			int followersCount, int followingCount, int tweetsCount) {
 		super();
 		this.name = name;
 		this.username = username;
 		this.avatarUrl = avatarUrl;
 		this.twitterId = twitterId;
+		this.description = description;
+		this.profileBackgroundUrl = profileBackgroundUrl;
+		this.followersCount = followersCount;
+		this.followingCount = followingCount;
+		this.tweetsCount = tweetsCount;
 	}
 
 	public String getName() {
@@ -67,6 +89,46 @@ public class User extends Model implements Serializable {
 		this.twitterId = twitterId;
 	}
 
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	public String getProfileBackgroundUrl() {
+		return profileBackgroundUrl;
+	}
+
+	public void setProfileBackgroundUrl(String profileBackgroundUrl) {
+		this.profileBackgroundUrl = profileBackgroundUrl;
+	}
+
+	public int getFollowersCount() {
+		return followersCount;
+	}
+
+	public void setFollowersCount(int followersCount) {
+		this.followersCount = followersCount;
+	}
+
+	public int getFollowingCount() {
+		return followingCount;
+	}
+
+	public void setFollowingCount(int followingCount) {
+		this.followingCount = followingCount;
+	}
+	
+	public int getTweetsCount() {
+		return tweetsCount;
+	}
+
+	public void setTweetsCount(int tweetsCount) {
+		this.tweetsCount = tweetsCount;
+	}
+
 	public String getUsernameFormatted() {
 		if (this.username == null) {
 			return null;
@@ -74,13 +136,17 @@ public class User extends Model implements Serializable {
 
 		return String.format("@%s", this.username);
 	}
-
+	
 	public void buildFromRemote(twitter4j.User remoteUser) {
 		this.name = remoteUser.getName();
 		this.username = remoteUser.getScreenName();
 		this.avatarUrl = remoteUser.getProfileImageURL();
 		this.twitterId = remoteUser.getId();
-		
+		this.description = remoteUser.getDescription();
+		this.profileBackgroundUrl = remoteUser.getProfileBackgroundImageURL();
+		this.followersCount = remoteUser.getFollowersCount();
+		this.followingCount = remoteUser.getFriendsCount();
+		this.tweetsCount = remoteUser.getStatusesCount();
 	}
 
 }
