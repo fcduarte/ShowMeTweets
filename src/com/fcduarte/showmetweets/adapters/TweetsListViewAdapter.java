@@ -4,14 +4,18 @@ import java.util.Collections;
 import java.util.List;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.fcduarte.showmetweets.R;
+import com.fcduarte.showmetweets.activities.HomeActivity;
+import com.fcduarte.showmetweets.activities.ProfileActivity;
 import com.fcduarte.showmetweets.model.Tweet;
 import com.squareup.picasso.Picasso;
 
@@ -95,6 +99,9 @@ public class TweetsListViewAdapter extends BaseAdapter {
 				.resizeDimen(R.dimen.body_media_image_size,
 						R.dimen.body_media_image_size).centerInside()
 				.into(holder.ivMediaBody);
+		
+		holder.ivUserAvatar.setTag(Integer.valueOf(position));
+		holder.ivUserAvatar.setOnClickListener(userAvatarOnClickListener);
 
 		return view;
 	}
@@ -117,5 +124,18 @@ public class TweetsListViewAdapter extends BaseAdapter {
 			notifyDataSetChanged();
 		}
 	}
+	
+	private OnClickListener userAvatarOnClickListener = new OnClickListener() {
+		
+		@Override
+		public void onClick(View view) {
+			Tweet tweet = getItem((int) view.getTag());
+			
+			Intent intent = new Intent(context, ProfileActivity.class);
+			intent.putExtra(HomeActivity.LOGGED_USER_KEY, tweet.getUser());
+			context.startActivity(intent);
+		}
+	};
+
 
 }
