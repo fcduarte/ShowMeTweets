@@ -1,21 +1,24 @@
 package com.fcduarte.showmetweets.activities;
 
-import android.app.Activity;
+import twitter4j.Twitter;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentTransaction;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.fcduarte.showmetweets.R;
+import com.fcduarte.showmetweets.fragments.ListTweetsFragment;
 import com.fcduarte.showmetweets.model.User;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Picasso.LoadedFrom;
 import com.squareup.picasso.Target;
 
-public class ProfileActivity extends Activity {
+public class ProfileActivity extends FragmentActivity {
 
 	private User mUser;
 	private RelativeLayout rlProfileDetails;
@@ -26,6 +29,8 @@ public class ProfileActivity extends Activity {
 	private TextView tvProfileTweetsCount;
 	private TextView tvProfileFollowersCount;
 	private TextView tvProfileFollowingCount;
+	private Twitter mTwitter;
+	private ListTweetsFragment mListTweetsFragment;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -61,6 +66,13 @@ public class ProfileActivity extends Activity {
 		tvProfileTweetsCount.setText(getString(R.string.tweets_count, mUser.getTweetsCount()));
 		tvProfileFollowersCount.setText(getString(R.string.followers_count, mUser.getFollowersCount()));
 		tvProfileFollowingCount.setText(getString(R.string.following_count, mUser.getFollowingCount()));
+		
+		mTwitter = (Twitter) getIntent().getSerializableExtra(HomeActivity.TWITTER_CLIENT_KEY);
+
+		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+		mListTweetsFragment = ListTweetsFragment.newInstance(mUser, mTwitter, false);
+		ft.replace(R.id.fragment_container, mListTweetsFragment);
+		ft.commit();
 	}
 	
 	private Target backgroundImageTarget = new Target() {
