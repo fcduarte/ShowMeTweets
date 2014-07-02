@@ -115,6 +115,31 @@ public class Tweet extends Model implements Serializable, Comparable<Tweet> {
 	}
 
 	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((tweetId == null) ? 0 : tweetId.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (!super.equals(obj))
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Tweet other = (Tweet) obj;
+		if (tweetId == null) {
+			if (other.tweetId != null)
+				return false;
+		} else if (!tweetId.equals(other.tweetId))
+			return false;
+		return true;
+	}
+
+	@Override
 	public int compareTo(Tweet another) {
 		return another.getCreatedAt().compareTo(this.getCreatedAt());
 	}

@@ -135,7 +135,12 @@ public class TweetsListViewAdapter extends BaseAdapter {
 			this.tweets = new ArrayList<>();
 		}
 		
-		this.tweets.addAll(tweets);
+		for (Tweet tweet : tweets) {
+			if (!this.tweets.contains(tweet)) {
+				this.tweets.add(tweet);
+			}
+		}
+		
 		Collections.sort(this.tweets);
 	}
 	

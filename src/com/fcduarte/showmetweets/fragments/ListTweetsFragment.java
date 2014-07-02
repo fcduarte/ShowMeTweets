@@ -54,10 +54,7 @@ public class ListTweetsFragment extends Fragment {
 		
 		mTwitterUtils = new TwitterUtils(getActivity());
 		mTweetDAO = new TweetDAO();
-		
-		if (mUser == null) {
-			mUser = new UserDAO().findByUsername(mTwitterUtils.loadLoggedUser());
-		}
+		mUser = new UserDAO().findByUsername(mTwitterUtils.loadLoggedUser());
 
 		mTwitter = mTwitterUtils.getTwitterClient();
 	}
@@ -124,15 +121,21 @@ public class ListTweetsFragment extends Fragment {
 		@Override
 		protected void onPreExecute() {
 			super.onPreExecute();
-			//FIXME
-//			mLoadingProgressBar.setVisibility(View.VISIBLE);
+			
+			if (!mRefreshContainer.isRefreshing()) {
+				mLoadingProgressBar.setVisibility(View.VISIBLE);
+			}
 		}
 
 		@Override
 		protected void onPostExecute(List<Tweet> result) {
 			super.onPostExecute(result);
 			
-			mLoadingProgressBar.setVisibility(View.GONE);
+			if (mRefreshContainer.isRefreshing()) {
+				mRefreshContainer.setRefreshing(false);
+			} else {
+				mLoadingProgressBar.setVisibility(View.GONE);
+			}
 			
 			if (result.isEmpty() && mUser != null) {
 				mTweetsListView.setEmptyView(mEmptyListTweets);
