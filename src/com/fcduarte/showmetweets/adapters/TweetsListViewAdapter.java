@@ -1,29 +1,38 @@
 package com.fcduarte.showmetweets.adapters;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import twitter4j.Twitter;
+
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.fcduarte.showmetweets.R;
+import com.fcduarte.showmetweets.activities.HomeActivity;
+import com.fcduarte.showmetweets.activities.ProfileActivity;
 import com.fcduarte.showmetweets.model.Tweet;
 import com.squareup.picasso.Picasso;
 
 public class TweetsListViewAdapter extends BaseAdapter {
 
 	private List<Tweet> tweets;
-	private Context context;
+	private Context mContext;
+	private Twitter mTwitter;
 
-	public TweetsListViewAdapter(List<Tweet> tweets, Context context) {
+	public TweetsListViewAdapter(List<Tweet> tweets, Context context, Twitter twitter) {
 		super();
 		this.tweets = tweets;
-		this.context = context;
+		this.mContext = context;
+		this.mTwitter = twitter;
 	}
 
 	public List<Tweet> getTweets() {
@@ -32,6 +41,7 @@ public class TweetsListViewAdapter extends BaseAdapter {
 
 	public void setTweets(List<Tweet> tweets) {
 		this.tweets = tweets;
+		notifyDataSetChanged();
 	}
 
 	@Override
@@ -53,8 +63,8 @@ public class TweetsListViewAdapter extends BaseAdapter {
 	public View getView(int position, View view, ViewGroup parent) {
 		ViewHolder holder;
 		if (view == null) {
-			view = LayoutInflater.from(context).inflate(
-					R.layout.list_detail_tweet, parent, false);
+			view = LayoutInflater.from(mContext).inflate(
+					R.layout.detail_tweet, parent, false);
 			holder = new ViewHolder();
 			holder.ivUserAvatar = (ImageView) view
 					.findViewById(R.id.user_avatar);
@@ -64,6 +74,7 @@ public class TweetsListViewAdapter extends BaseAdapter {
 			holder.tvTimeStampt = (TextView) view.findViewById(R.id.timestamp);
 			holder.tvRetweetCount = (TextView) view.findViewById(R.id.retweet_count);
 			holder.tvFavoriteCount = (TextView) view.findViewById(R.id.favorite_count);
+			holder.ivMediaBody = (ImageView) view.findViewById(R.id.media_body);
 
 			view.setTag(holder);
 		} else {
@@ -72,7 +83,9 @@ public class TweetsListViewAdapter extends BaseAdapter {
 
 		// Get the image URL for the current position.
 		Tweet tweet = getItem(position);
-		String url = tweet.getUser().getAvatarUrl();
+		String avatarUrl = tweet.getUser().getAvatarUrl();
+		String mediaBodyUrl = tweet.getBodyMediaURL();
+
 		holder.tvUsername.setText(tweet.getUser().getUsernameFormatted());
 		holder.tvName.setText(tweet.getUser().getName());
 		holder.tvBody.setText(tweet.getBody());
@@ -80,13 +93,21 @@ public class TweetsListViewAdapter extends BaseAdapter {
 		holder.tvRetweetCount.setText(String.valueOf(tweet.getRetweetCount()));
 		holder.tvFavoriteCount.setText(String.valueOf(tweet.getFavoriteCount()));
 
-		// Trigger the download of the URL asynchronously into the image view.
-		Picasso.with(context)
-				.load(url)
+		Picasso.with(mContext)
+				.load(avatarUrl)
 				.placeholder(R.drawable.user_placeholder)
 				.resizeDimen(R.dimen.avatar_image_size,
 						R.dimen.avatar_image_size).centerInside()
 				.into(holder.ivUserAvatar);
+
+		Picasso.with(mContext)
+				.load(mediaBodyUrl)
+				.resizeDimen(R.dimen.body_media_image_size,
+						R.dimen.body_media_image_size).centerInside()
+				.into(holder.ivMediaBody);
+		
+		holder.ivUserAvatar.setTag(Integer.valueOf(position));
+		holder.ivUserAvatar.setOnClickListener(userAvatarOnClickListener);
 
 		return view;
 	}
@@ -99,14 +120,42 @@ public class TweetsListViewAdapter extends BaseAdapter {
 		TextView tvTimeStampt;
 		TextView tvRetweetCount;
 		TextView tvFavoriteCount;
+		ImageView ivMediaBody;
 	}
 	
 	public void addTweet(Tweet tweet) {
 		if (this.tweets != null) {
 			this.tweets.add(tweet);
 			Collections.sort(this.tweets);
-			notifyDataSetChanged();
 		}
 	}
+	
+	public void addTweets(List<Tweet> tweets) {
+		if (this.tweets == null) {
+			this.tweets = new ArrayList<>();
+		}
+		
+		for (Tweet tweet : tweets) {
+			if (!this.tweets.contains(tweet)) {
+				this.tweets.add(tweet);
+			}
+		}
+		
+		Collections.sort(this.tweets);
+	}
+	
+	private OnClickListener userAvatarOnClickListener = new OnClickListener() {
+		
+		@Override
+		public void onClick(View view) {
+			Tweet tweet = getItem((int) view.getTag());
+			
+			Intent intent = new Intent(mContext, ProfileActivity.class);
+			intent.putExtra(HomeActivity.LOGGED_USER_KEY, tweet.getUser());
+			intent.putExtra(HomeActivity.TWITTER_CLIENT_KEY, mTwitter);
+			mContext.startActivity(intent);
+		}
+	};
+
 
 }

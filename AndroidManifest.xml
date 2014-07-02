@@ -23,7 +23,7 @@
             android:value="ShowMeTweets" />
         <meta-data
             android:name="AA_DB_VERSION"
-            android:value="1" />
+            android:value="3" />
 
         <activity
             android:name="com.fcduarte.showmetweets.activities.SignInWithTwitter"
@@ -46,12 +46,20 @@
         </activity>
         <activity
             android:name="com.fcduarte.showmetweets.activities.HomeActivity"
-            android:launchMode="singleTop"
-            android:label="@string/home" >
+            android:label="@string/home"
+            android:launchMode="singleTop" >
         </activity>
         <activity
             android:name="com.fcduarte.showmetweets.activities.ComposeNewTweetActivity"
             android:label="@string/title_activity_compose_new_tweet"
+            android:parentActivityName="com.fcduarte.showmetweets.activities.HomeActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.fcduarte.showmetweets.activities.HomeActivity" />
+        </activity>
+        <activity
+            android:name="com.fcduarte.showmetweets.activities.ProfileActivity"
+            android:label="@string/title_activity_profile"
             android:parentActivityName="com.fcduarte.showmetweets.activities.HomeActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"

@@ -78,7 +78,7 @@ public class ComposeNewTweetActivity extends Activity {
 			return;
 		}
 		
-		Tweet tweet = new Tweet(tweetBody, new Date(), null, mLoggedUser, 0, 0);
+		Tweet tweet = new Tweet(tweetBody, new Date(), null, mLoggedUser, 0, 0, null);
 		
 		Intent intent = new Intent();
 		intent.putExtra(HomeActivity.TWEET_KEY, tweet);

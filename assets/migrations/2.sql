@@ -1,0 +1,1 @@
+ALTER TABLE tweets ADD COLUMN body_media_url TEXT;
