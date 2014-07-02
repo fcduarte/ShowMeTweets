@@ -4,18 +4,12 @@
     android:layout_height="match_parent"
     tools:context="${packageName}.${activityClass}" >
 
-    <android.support.v4.widget.SwipeRefreshLayout
-        android:id="@+id/swipe_container"
+    <FrameLayout
+        android:id="@+id/tweets_list_fragment"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" >
-
-        <FrameLayout
-            android:id="@+id/tweets_list_fragment"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentTop="true" >
-        </FrameLayout>
-    </android.support.v4.widget.SwipeRefreshLayout>
+        android:layout_height="match_parent"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true" >
+    </FrameLayout>
 
 </RelativeLayout>

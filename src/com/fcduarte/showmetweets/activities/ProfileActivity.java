@@ -1,6 +1,5 @@
 package com.fcduarte.showmetweets.activities;
 
-import twitter4j.Twitter;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
@@ -12,7 +11,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.fcduarte.showmetweets.R;
-import com.fcduarte.showmetweets.fragments.ListTweetsFragment;
+import com.fcduarte.showmetweets.fragments.UserTimelineFragment;
 import com.fcduarte.showmetweets.model.User;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Picasso.LoadedFrom;
@@ -29,8 +28,7 @@ public class ProfileActivity extends FragmentActivity {
 	private TextView tvProfileTweetsCount;
 	private TextView tvProfileFollowersCount;
 	private TextView tvProfileFollowingCount;
-	private Twitter mTwitter;
-	private ListTweetsFragment mListTweetsFragment;
+	private UserTimelineFragment mUserTimelineFragment;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -67,11 +65,9 @@ public class ProfileActivity extends FragmentActivity {
 		tvProfileFollowersCount.setText(getString(R.string.followers_count, mUser.getFollowersCount()));
 		tvProfileFollowingCount.setText(getString(R.string.following_count, mUser.getFollowingCount()));
 		
-		mTwitter = (Twitter) getIntent().getSerializableExtra(HomeActivity.TWITTER_CLIENT_KEY);
-
 		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-		mListTweetsFragment = ListTweetsFragment.newInstance(mUser, mTwitter, false);
-		ft.replace(R.id.fragment_container, mListTweetsFragment);
+		mUserTimelineFragment = UserTimelineFragment.newInstance(mUser);
+		ft.replace(R.id.fragment_container, mUserTimelineFragment);
 		ft.commit();
 	}
 	

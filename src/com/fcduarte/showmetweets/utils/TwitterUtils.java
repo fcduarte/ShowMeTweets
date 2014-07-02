@@ -86,14 +86,21 @@ public class TwitterUtils {
 		return loggedUser == null || !user.getUsername().equals(loggedUser);
 	}
 	
-	public static Twitter getTwitterClient() {
+	public Twitter getTwitterClient() {
 		ConfigurationBuilder builder = new ConfigurationBuilder();
 		builder.setOAuthConsumerKey(TWITTER_CONSUMER_KEY);
 		builder.setOAuthConsumerSecret(TWITTER_CONSUMER_SECRET);
 		Configuration configuration = builder.build();
 
 		TwitterFactory factory = new TwitterFactory(configuration);
-		return factory.getInstance();
+		Twitter twitter = factory.getInstance();
+		
+		AccessToken accessToken = loadAccessToken();
+		
+		if (accessToken != null) {
+			twitter.setOAuthAccessToken(accessToken);
+		}
+		return twitter;
 	}
 
 }

@@ -9,6 +9,8 @@ import twitter4j.TwitterException;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,49 +23,43 @@ import android.widget.TextView;
 import com.fcduarte.showmetweets.R;
 import com.fcduarte.showmetweets.adapters.TweetsListViewAdapter;
 import com.fcduarte.showmetweets.dao.TweetDAO;
+import com.fcduarte.showmetweets.dao.UserDAO;
 import com.fcduarte.showmetweets.listeners.EndlessScrollListener;
 import com.fcduarte.showmetweets.model.Tweet;
 import com.fcduarte.showmetweets.model.User;
 import com.fcduarte.showmetweets.utils.ConnectivityUtils;
+import com.fcduarte.showmetweets.utils.TwitterUtils;
 
 public class ListTweetsFragment extends Fragment {
 	
-	private static final String USER_KEY = "user-key";
-	private static final String TWITTER_CLIENT_KEY = "twitter-client-key";
-	private static final String IS_HOME_TIMELINE_KEY = "is-home-timeline";
-	
+	public static enum TimelineType {
+		HOME,
+		USER,
+		MENTIONS
+	}
 	private ListView mTweetsListView;
 	private TextView mEmptyListTweets;
 	private ProgressBar mLoadingProgressBar;
 	private TweetsListViewAdapter mTweetsListViewAdapter;
-	private User mUser;
+	protected User mUser;
 	private Twitter mTwitter;
 	private TweetDAO mTweetDAO;
-	private boolean mIsHomeTimeline;
-	
-	public static ListTweetsFragment newInstance(User user, Twitter twitter, boolean isHomeTimeline) {
-		ListTweetsFragment fragment = new ListTweetsFragment();
-
-		Bundle arguments = new Bundle();
-		arguments.putSerializable(USER_KEY, user);
-		arguments.putSerializable(TWITTER_CLIENT_KEY, twitter);
-		arguments.putBoolean(IS_HOME_TIMELINE_KEY, isHomeTimeline);
-		
-		fragment.setArguments(arguments);
-		return fragment;
-	}
-	
-	public void setUser(User user) {
-		this.mUser = user;
-	}
+	protected TimelineType mTimelineType;
+	private TwitterUtils mTwitterUtils;
+	private SwipeRefreshLayout mRefreshContainer;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		
-		mUser = (User) getArguments().getSerializable(USER_KEY);
-		mTwitter = (Twitter) getArguments().getSerializable(TWITTER_CLIENT_KEY);
-		mIsHomeTimeline = getArguments().getBoolean(IS_HOME_TIMELINE_KEY);
+		mTwitterUtils = new TwitterUtils(getActivity());
+		mTweetDAO = new TweetDAO();
+		
+		if (mUser == null) {
+			mUser = new UserDAO().findByUsername(mTwitterUtils.loadLoggedUser());
+		}
+
+		mTwitter = mTwitterUtils.getTwitterClient();
 	}
 
 	@Override
@@ -71,8 +67,6 @@ public class ListTweetsFragment extends Fragment {
 			Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.fragment_list_tweets, container, false);
 		
-		mTweetDAO = new TweetDAO();
-
 		mTweetsListView = (ListView) view.findViewById(R.id.tweets_list);
 		mTweetsListView.setOnScrollListener(endlessScrollListener);
 		mEmptyListTweets = (TextView) view.findViewById(R.id.empty_list_tweets);
@@ -81,6 +75,13 @@ public class ListTweetsFragment extends Fragment {
 		mTweetsListViewAdapter = new TweetsListViewAdapter(new ArrayList<Tweet>(), view.getContext(), mTwitter);
 
 		mTweetsListView.setAdapter(mTweetsListViewAdapter);
+		
+		mRefreshContainer = (SwipeRefreshLayout) view.findViewById(R.id.swipe_container);
+		mRefreshContainer.setColorScheme(android.R.color.holo_blue_bright, 
+	            android.R.color.holo_green_light, 
+	            android.R.color.holo_orange_light, 
+	            android.R.color.holo_red_light);
+		mRefreshContainer.setOnRefreshListener(refreshListener);
 		
 		return view;
 	}
@@ -110,13 +111,21 @@ public class ListTweetsFragment extends Fragment {
 		}
 	};
 	
+	private OnRefreshListener refreshListener = new OnRefreshListener() {
+
+		@Override
+		public void onRefresh() {
+			new SynchronizeTweetsAsyncTask().execute(1);
+		}
+	};
+	
 	private class SynchronizeTweetsAsyncTask extends AsyncTask<Integer, Void, List<Tweet>> {
 
 		@Override
 		protected void onPreExecute() {
 			super.onPreExecute();
-			
-			mLoadingProgressBar.setVisibility(View.VISIBLE);
+			//FIXME
+//			mLoadingProgressBar.setVisibility(View.VISIBLE);
 		}
 
 		@Override
@@ -143,7 +152,7 @@ public class ListTweetsFragment extends Fragment {
 			}
 			
 			if (ConnectivityUtils.isConnected(getActivity())) {
-				tweets = syncRemoteTweets(mUser, currentPage, mIsHomeTimeline);
+				tweets = syncRemoteTweets(mUser, currentPage, mTimelineType);
 				mTweetsListViewAdapter.addTweets(tweets);
 			} else {
 				tweets = mTweetDAO.findByUser(mUser);
@@ -153,16 +162,27 @@ public class ListTweetsFragment extends Fragment {
 			return tweets;
 		}
 
-		private List<Tweet> syncRemoteTweets(User user, int currentPage, boolean isHomeTimeline) {
+		private List<Tweet> syncRemoteTweets(User user, int currentPage, TimelineType timelineType) {
 			List<Tweet> tweets = new ArrayList<>();
 			
 			try {
 				List<twitter4j.Status> listStatus = new ArrayList<>();
 				
-				if (isHomeTimeline) {
+				switch (timelineType) {
+				case HOME:
 					listStatus = mTwitter.getHomeTimeline(new Paging(currentPage));
-				} else {
+					break;
+
+				case USER:
 					listStatus = mTwitter.getUserTimeline(user.getTwitterId(), new Paging(currentPage));
+					break;
+
+				case MENTIONS:
+					listStatus = mTwitter.getMentionsTimeline(new Paging(currentPage));
+					break;
+
+				default:
+					break;
 				}
 				
 				for (twitter4j.Status status : listStatus) {
