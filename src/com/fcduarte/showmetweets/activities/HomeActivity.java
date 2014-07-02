@@ -27,6 +27,8 @@ import com.fcduarte.showmetweets.utils.TwitterUtils;
 
 public class HomeActivity extends FragmentActivity {
 
+	private static final String MENTIONS_TIMELINE_FRAGMENT = "MentionsTimelineFragment";
+	private static final String HOME_TIMELINE_FRAGMENT = "HomeTimelineFragment";
 	private static final int COMPOSE_NEW_TWEET = 10;
 	public static final String LOGGED_USER_KEY = "logged-user";
 	public static final String TWEET_KEY = "tweet";
@@ -36,7 +38,7 @@ public class HomeActivity extends FragmentActivity {
 	private Twitter mTwitter;
 	private TweetDAO mTweetDAO;
 	private TwitterUtils mTwitterUtils;
-//	ListTweetsFragment mListTweetsFragment;
+	private HomeTimelineFragment mHomeTimelineFragment;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -61,10 +63,11 @@ public class HomeActivity extends FragmentActivity {
 				.newTab()
 				.setText("HOME")
 				.setIcon(R.drawable.ic_home)
-				.setTag("HomeTimelineFragment")
+				.setTag(HOME_TIMELINE_FRAGMENT)
 				.setTabListener(
-					new FragmentTabListener<HomeTimelineFragment>(R.id.tweets_list_fragment, this, "first",
-							HomeTimelineFragment.class));
+						new FragmentTabListener<HomeTimelineFragment>(
+								R.id.tweets_list_fragment, this, HOME_TIMELINE_FRAGMENT,
+								HomeTimelineFragment.class));
 		
 		actionBar.addTab(homeTimelineTab);
 		actionBar.selectTab(homeTimelineTab);
@@ -73,10 +76,11 @@ public class HomeActivity extends FragmentActivity {
 				.newTab()
 				.setText("MENTIONS")
 				.setIcon(R.drawable.ic_mentions)
-				.setTag("MentionsTimelineFragment")
+				.setTag(MENTIONS_TIMELINE_FRAGMENT)
 				.setTabListener(
-					new FragmentTabListener<MentionsTimelineFragment>(R.id.tweets_list_fragment, this, "first",
-							MentionsTimelineFragment.class));
+						new FragmentTabListener<MentionsTimelineFragment>(
+								R.id.tweets_list_fragment, this, MENTIONS_TIMELINE_FRAGMENT,
+								MentionsTimelineFragment.class));
 
 		actionBar.addTab(mentionsTab);
 	}
@@ -94,8 +98,8 @@ public class HomeActivity extends FragmentActivity {
 			tweet.getUser().save();
 			tweet.save();
 			
-			// FIXME
-//			mListTweetsFragment.addNewTweet(tweet);
+			mHomeTimelineFragment = (HomeTimelineFragment) getSupportFragmentManager().findFragmentByTag(HOME_TIMELINE_FRAGMENT);
+			mHomeTimelineFragment.addNewTweet(tweet);
 
 			new SendTweetsToRemoteAsyncTask().execute();
 		}
