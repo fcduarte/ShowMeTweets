@@ -32,7 +32,6 @@ public class HomeActivity extends FragmentActivity {
 	private static final int COMPOSE_NEW_TWEET = 10;
 	public static final String LOGGED_USER_KEY = "logged-user";
 	public static final String TWEET_KEY = "tweet";
-	public static final String TWITTER_CLIENT_KEY = "twitter-client";
 	
 	private User mLoggedUser;
 	private Twitter mTwitter;
@@ -125,7 +124,8 @@ public class HomeActivity extends FragmentActivity {
 	private void callProfileActivity(Context context) {
 		Intent intent = new Intent(context, ProfileActivity.class);
 		intent.putExtra(LOGGED_USER_KEY, mLoggedUser);
-		intent.putExtra(TWITTER_CLIENT_KEY, mTwitter);
+		intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+		
 		startActivity(intent);
 	}
 	

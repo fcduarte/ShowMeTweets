@@ -143,7 +143,7 @@ public class User extends Model implements Serializable {
 		this.avatarUrl = remoteUser.getProfileImageURL();
 		this.twitterId = remoteUser.getId();
 		this.description = remoteUser.getDescription();
-		this.profileBackgroundUrl = remoteUser.getProfileBackgroundImageURL();
+		this.profileBackgroundUrl = remoteUser.getProfileBannerMobileURL();
 		this.followersCount = remoteUser.getFollowersCount();
 		this.followingCount = remoteUser.getFriendsCount();
 		this.tweetsCount = remoteUser.getStatusesCount();
