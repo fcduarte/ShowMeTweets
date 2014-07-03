@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import twitter4j.Twitter;
-
 import android.content.Context;
 import android.content.Intent;
 import android.view.LayoutInflater;
@@ -26,13 +24,11 @@ public class TweetsListViewAdapter extends BaseAdapter {
 
 	private List<Tweet> tweets;
 	private Context mContext;
-	private Twitter mTwitter;
 
-	public TweetsListViewAdapter(List<Tweet> tweets, Context context, Twitter twitter) {
+	public TweetsListViewAdapter(List<Tweet> tweets, Context context) {
 		super();
 		this.tweets = tweets;
 		this.mContext = context;
-		this.mTwitter = twitter;
 	}
 
 	public List<Tweet> getTweets() {
@@ -152,7 +148,8 @@ public class TweetsListViewAdapter extends BaseAdapter {
 			
 			Intent intent = new Intent(mContext, ProfileActivity.class);
 			intent.putExtra(HomeActivity.LOGGED_USER_KEY, tweet.getUser());
-			intent.putExtra(HomeActivity.TWITTER_CLIENT_KEY, mTwitter);
+			intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+
 			mContext.startActivity(intent);
 		}
 	};

@@ -9,6 +9,7 @@
         android:id="@+id/profile_details"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="#939393"
         android:padding="8dp" >
 
         <ImageView

@@ -69,7 +69,7 @@ public class ListTweetsFragment extends Fragment {
 		mEmptyListTweets = (TextView) view.findViewById(R.id.empty_list_tweets);
 
 		mLoadingProgressBar = (ProgressBar) view.findViewById(R.id.progress_bar_loading);
-		mTweetsListViewAdapter = new TweetsListViewAdapter(new ArrayList<Tweet>(), view.getContext(), mTwitter);
+		mTweetsListViewAdapter = new TweetsListViewAdapter(new ArrayList<Tweet>(), view.getContext());
 
 		mTweetsListView.setAdapter(mTweetsListViewAdapter);
 		
