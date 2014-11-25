@@ -74,10 +74,7 @@ public class ListTweetsFragment extends Fragment {
 		mTweetsListView.setAdapter(mTweetsListViewAdapter);
 		
 		mRefreshContainer = (SwipeRefreshLayout) view.findViewById(R.id.swipe_container);
-		mRefreshContainer.setColorScheme(android.R.color.holo_blue_bright, 
-	            android.R.color.holo_green_light, 
-	            android.R.color.holo_orange_light, 
-	            android.R.color.holo_red_light);
+		mRefreshContainer.setColorSchemeResources(android.R.color.holo_blue_bright);
 		mRefreshContainer.setOnRefreshListener(refreshListener);
 		
 		return view;
